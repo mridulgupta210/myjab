@@ -3,6 +3,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const cron = require('node-cron');
 const nodemailer = require("nodemailer");
+const path = require("path");
 
 require('dotenv').config();
 
@@ -14,6 +15,7 @@ const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "client", "build")));
 
 const uri = process.env.ATLAS_URI;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true });
@@ -60,7 +62,7 @@ function sendMail(text, mailId) {
         service: "gmail",
         auth: {
             user: "myjabnotifier@gmail.com",
-            pass: "mridulgupta"
+            pass: process.env.EMAIL_PASSWORD
         }
     });
 
@@ -169,6 +171,10 @@ My Jab
 const usersRouter = require('./routes/users');
 
 app.use('/users', usersRouter);
+
+app.get("*", (req, res) => {
+    res.sendFile(path.join(__dirname, "client", "build", "index.html"));
+});
 
 app.listen(PORT, () => {
     console.log(`Server listening on ${PORT}`);
