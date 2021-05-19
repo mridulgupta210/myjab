@@ -5,8 +5,12 @@
   justify-content: center;
 }
 
-.main label, .main div {
+.main label, .main div, .main span {
   padding: 20px;
+}
+
+.main button {
+  margin: 20px;
 }
 
 .failure {
