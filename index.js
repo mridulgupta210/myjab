@@ -56,6 +56,10 @@ const hitApi = (pincode, district, date) => {
             console.log("response from cowin init:", JSON.stringify(response))
             return response.centers;
         })
+        .catch(err => {
+            console.error(err);
+            return [];
+        })
 }
 
 function sendMail(text, mailId) {
