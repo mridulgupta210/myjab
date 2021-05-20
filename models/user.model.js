@@ -9,12 +9,6 @@ const userSchema = new Schema({
     trim: true,
     minlength: 3
   },
-  phone: {
-    type: String,
-    trim: true,
-    minlength: 10,
-    maxlength: 10
-  },
   email: {
     type: String,
     unique: true,
