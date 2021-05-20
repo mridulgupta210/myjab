@@ -58,8 +58,8 @@ const hitApi = (pincode, district, date) => {
             return [];
         })
         .then(response => {
-            console.log("response from cowin:", JSON.stringify(response))
-            return response.centers;
+            console.log("response from cowin:", JSON.stringify(response));
+            return response.centers ? response.centers : [];
         });
 }
 
