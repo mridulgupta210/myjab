@@ -54,7 +54,7 @@ const hitApi = (pincode, district, date) => {
 
     return api_helper.make_API_call(url)
         .then(response => {
-            console.log("response from cowin init:", JSON.stringify(response))
+            console.log("response from cowin:", JSON.stringify(response))
             return response.centers;
         })
         .catch(err => {
