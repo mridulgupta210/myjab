@@ -53,6 +53,7 @@ const hitApi = (pincode, district, date) => {
 
     return api_helper.make_API_call(url)
         .then(response => {
+            console.log("response from cowin init:", JSON.stringify(response))
             return response.centers;
         })
 }
@@ -93,6 +94,7 @@ cron.schedule("*/10 * * * * *", function() {
             const intervalId = setInterval(() => {
                 hitApi(user.pincode, user.district, date)
                     .then(res => {
+                        console.log("response from cowin:", JSON.stringify(res))
                         if (res.length === 0) {
                             clearInterval(intervalId);
                             onCentersFetchComplete();
