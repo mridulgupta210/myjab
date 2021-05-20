@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const cron = require('node-cron');
 const nodemailer = require("nodemailer");
 const path = require("path");
-const fetch = require('node-fetch');
 
 require('dotenv').config();
 
@@ -53,26 +52,15 @@ const hitApi = (pincode, district, date) => {
     const url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/${pincode ? 'calendarByPin' : 'calendarByDistrict'}?${pincode ? `pincode=${pincode}` : `district_id=${district}`}&date=${getDate(date)}`;
     console.log("url to cowin:", url);
 
-    return fetch(url)
-        .then(res => res.json())
-        .then(response => {
-            console.log("response from cowin:", JSON.stringify(response))
-            return response.centers;
-        })
+    return api_helper.make_API_call(url)
         .catch(err => {
             console.error(JSON.stringify(err));
             return [];
+        })
+        .then(response => {
+            console.log("response from cowin:", JSON.stringify(response))
+            return response.centers;
         });
-
-    // return api_helper.make_API_call(url)
-    //     .then(response => {
-    //         console.log("response from cowin:", JSON.stringify(response))
-    //         return response.centers;
-    //     })
-    //     .catch(err => {
-    //         console.error(JSON.stringify(err));
-    //         return [];
-    //     })
 }
 
 function sendMail(text, mailId) {
@@ -102,7 +90,7 @@ function sendMail(text, mailId) {
         });
 }
 
-cron.schedule("*/10 * * * * *", function() {
+cron.schedule("*/2 * * * *", function() {
 // cron.schedule('0 */1 * * *', function () {
     fetchData((users) => {
         users.forEach(user => {
@@ -119,7 +107,7 @@ cron.schedule("*/10 * * * * *", function() {
                             centers.push(...res);
                         }
                     })
-            }, 1000);
+            }, 10000);
 
             const onCentersFetchComplete = () => {
                 const validCenters = [];
