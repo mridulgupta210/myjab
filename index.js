@@ -50,6 +50,7 @@ const getDate = d => {
 
 const hitApi = (pincode, district, date) => {
     const url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/${pincode ? 'calendarByPin' : 'calendarByDistrict'}?${pincode ? `pincode=${pincode}` : `district_id=${district}`}&date=${getDate(date)}`;
+    console.log("url to cowin:", url);
 
     return api_helper.make_API_call(url)
         .then(response => {
@@ -57,7 +58,7 @@ const hitApi = (pincode, district, date) => {
             return response.centers;
         })
         .catch(err => {
-            console.error(err);
+            console.error(JSON.stringify(err));
             return [];
         })
 }
@@ -98,7 +99,6 @@ cron.schedule("*/10 * * * * *", function() {
             const intervalId = setInterval(() => {
                 hitApi(user.pincode, user.district, date)
                     .then(res => {
-                        console.log("response from cowin:", JSON.stringify(res))
                         if (res.length === 0) {
                             clearInterval(intervalId);
                             onCentersFetchComplete();
