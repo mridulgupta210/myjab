@@ -29,9 +29,9 @@ const hitApi = (pincode, district, date) => {
 
 app.get('/', (req, res) => {
     const { pincode, district, date } = req.query;
-
-    hitApi(pincode, district, date)
-        .then(respnse => res.send(respnse))
+    res.send("hello")
+    // hitApi(pincode, district, date)
+    //     .then(respnse => res.send(respnse))
 })
 
 app.listen(PORT, () => {
