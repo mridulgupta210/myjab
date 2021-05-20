@@ -54,14 +54,17 @@ const hitApi = (pincode, district, date) => {
     const url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/${pincode ? 'calendarByPin' : 'calendarByDistrict'}?${pincode ? `pincode=${pincode}` : `district_id=${district}`}&date=${getDate(date)}`;
     console.log("url to cowin:", url);
 
-    return got.get(url, {responseType: 'json'})
+    return got.get(url, {
+        responseType: 'json',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+    })
         .catch(err => {
             console.error(JSON.stringify(err));
             return [];
         })
         .then(response => {
             console.log("response from cowin:", response.body);
-            return response.body.centers ? response.body.centers : [];
+            return response.body ? response.body.centers : [];
         });
 
     // return axios.get(url, {
