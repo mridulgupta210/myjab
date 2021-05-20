@@ -2,6 +2,7 @@
 /client/build
 
 /myjabproxy/node_modules
+/.vscode
 
 /.env
 /node_modules
