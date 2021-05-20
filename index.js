@@ -93,9 +93,8 @@ function sendMail(text, mailId) {
         });
 }
 
-cron.schedule("*/10 * * * * *", function () {
-    // cron.schedule("*/2 * * * *", function() {
-    // cron.schedule('0 */1 * * *', function () {
+// cron.schedule("*/10 * * * * *", function () {
+cron.schedule('0 */1 * * *', function () {
     fetchData((users) => {
         users.forEach(user => {
             const centers = [];
