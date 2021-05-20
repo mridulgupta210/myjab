@@ -37,9 +37,9 @@ const create = async () => {
     
     app.get('/', (req, res) => {
         const { pincode, district, date } = req.query;
-        res.send("hello")
-        // hitApi(pincode, district, date)
-        //     .then(respnse => res.send(respnse))
+    
+        hitApi(pincode, district, date)
+            .then(respnse => res.send(respnse))
     })
 
     // Error handler
