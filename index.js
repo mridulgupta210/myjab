@@ -84,6 +84,7 @@ function sendMail(text, mailId) {
         });
 }
 
+// cron.schedule("*/10 * * * * *", function() {
 cron.schedule('0 */1 * * *', function () {
     fetchData((users) => {
         users.forEach(user => {
@@ -145,11 +146,13 @@ Available centers in your areas are mentioned below:
 `;
 
     centers.forEach((center, index) => {
-        const newText = `${index + 1}. ${center.centerName} (${center.address})
+        const newText = `
+${index + 1}. ${center.centerName} (${center.address})
     Fee type: ${center.fees}
     Slots:
         ${center.slots.map((slot, i) => `${String.fromCharCode(97 + i)}. Date: ${slot.date}, 
             Min. Age Limit: ${slot.min_age_limit}
+            Vaccine type: ${slot.vaccine}
             Available Capacity: ${slot.available_capacity}
             Available Capacity for dose1: ${slot.available_capacity_dose1}
             Available Capacity for dose2: ${slot.available_capacity_dose2}
