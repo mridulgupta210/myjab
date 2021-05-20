@@ -69,24 +69,14 @@ const hitApi = (pincode, district, date) => {
     //         return response.body ? response.body.centers : [];
     //     });
 
-    return axios.get(url, {
-        // withCredentials: true,
-        headers: { 
-            // 'X-Requested-With': 'XMLHttpRequest'
-                    Host: 'cdn-api.co-vin.in',
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
-        }
-    })
-        .catch(err => {
-            console.error(JSON.stringify(err));
-            return [];
-        })
-        .then(response => {
-            console.log("response from cowin:", JSON.stringify(response));
-            return response.centers ? response.centers : [];
-        });
-
-    // return api_helper.make_API_call(url)
+    // return axios.get(url, {
+    //     // withCredentials: true,
+    //     headers: { 
+    //         // 'X-Requested-With': 'XMLHttpRequest'
+    //                 Host: 'cdn-api.co-vin.in',
+    //     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
+    //     }
+    // })
     //     .catch(err => {
     //         console.error(JSON.stringify(err));
     //         return [];
@@ -95,6 +85,16 @@ const hitApi = (pincode, district, date) => {
     //         console.log("response from cowin:", JSON.stringify(response));
     //         return response.centers ? response.centers : [];
     //     });
+
+    return api_helper.make_API_call(url)
+        .catch(err => {
+            console.error(JSON.stringify(err));
+            return [];
+        })
+        .then(response => {
+            console.log("response from cowin:", JSON.stringify(response));
+            return response.centers ? response.centers : [];
+        });
 }
 
 function sendMail(text, mailId) {
