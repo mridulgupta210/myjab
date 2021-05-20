@@ -1,5 +1,7 @@
 /client/node_modules
 /client/build
 
+/myjabproxy/node_modules
+
 /.env
 /node_modules
