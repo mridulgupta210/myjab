@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cron = require('node-cron');
 const nodemailer = require("nodemailer");
 const path = require("path");
+const axios = require('axios');
+const got = require("got");
 
 require('dotenv').config();
 
@@ -52,15 +54,38 @@ const hitApi = (pincode, district, date) => {
     const url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/${pincode ? 'calendarByPin' : 'calendarByDistrict'}?${pincode ? `pincode=${pincode}` : `district_id=${district}`}&date=${getDate(date)}`;
     console.log("url to cowin:", url);
 
-    return api_helper.make_API_call(url)
+    return got.get(url, {responseType: 'json'})
         .catch(err => {
             console.error(JSON.stringify(err));
             return [];
         })
         .then(response => {
-            console.log("response from cowin:", JSON.stringify(response));
-            return response.centers ? response.centers : [];
+            console.log("response from cowin:", response.body);
+            return response.body.centers ? response.body.centers : [];
         });
+
+    // return axios.get(url, {
+    //     withCredentials: true,
+    //     headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    // })
+    //     .catch(err => {
+    //         console.error(JSON.stringify(err));
+    //         return [];
+    //     })
+    //     .then(response => {
+    //         console.log("response from cowin:", JSON.stringify(response));
+    //         return response.centers ? response.centers : [];
+    //     });
+
+    // return api_helper.make_API_call(url)
+    //     .catch(err => {
+    //         console.error(JSON.stringify(err));
+    //         return [];
+    //     })
+    //     .then(response => {
+    //         console.log("response from cowin:", JSON.stringify(response));
+    //         return response.centers ? response.centers : [];
+    //     });
 }
 
 function sendMail(text, mailId) {
@@ -90,8 +115,9 @@ function sendMail(text, mailId) {
         });
 }
 
-// cron.schedule("*/2 * * * *", function() {
-cron.schedule('0 */1 * * *', function () {
+cron.schedule("*/10 * * * * *", function () {
+    // cron.schedule("*/2 * * * *", function() {
+    // cron.schedule('0 */1 * * *', function () {
     fetchData((users) => {
         users.forEach(user => {
             const centers = [];
