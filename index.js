@@ -54,33 +54,37 @@ const hitApi = (pincode, district, date) => {
     const url = `https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/${pincode ? 'calendarByPin' : 'calendarByDistrict'}?${pincode ? `pincode=${pincode}` : `district_id=${district}`}&date=${getDate(date)}`;
     console.log("url to cowin:", url);
 
-    return got.get(url, {
-        responseType: 'json',
-        Host: 'cdn-api.co-vin.in',
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
-    })
-        .catch(err => {
-            console.error(JSON.stringify(err));
-            return [];
-        })
-        .then(response => {
-            console.log("response headers from cowin:", response.headers);
-            console.log("response from cowin:", response.body);
-            return response.body ? response.body.centers : [];
-        });
-
-    // return axios.get(url, {
-    //     withCredentials: true,
-    //     headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    // return got.get(url, {
+    //     responseType: 'json',
+    //     Host: 'cdn-api.co-vin.in',
+    //     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
     // })
     //     .catch(err => {
     //         console.error(JSON.stringify(err));
     //         return [];
     //     })
     //     .then(response => {
-    //         console.log("response from cowin:", JSON.stringify(response));
-    //         return response.centers ? response.centers : [];
+    //         console.log("response headers from cowin:", response.headers);
+    //         console.log("response from cowin:", response.body);
+    //         return response.body ? response.body.centers : [];
     //     });
+
+    return axios.get(url, {
+        // withCredentials: true,
+        headers: { 
+            // 'X-Requested-With': 'XMLHttpRequest'
+                    Host: 'cdn-api.co-vin.in',
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
+        }
+    })
+        .catch(err => {
+            console.error(JSON.stringify(err));
+            return [];
+        })
+        .then(response => {
+            console.log("response from cowin:", JSON.stringify(response));
+            return response.centers ? response.centers : [];
+        });
 
     // return api_helper.make_API_call(url)
     //     .catch(err => {
@@ -211,6 +215,8 @@ My Jab
 const usersRouter = require('./routes/users');
 
 app.use('/users', usersRouter);
+
+// app.use(express.static('./client/build'));
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "client", "build", "index.html"));
