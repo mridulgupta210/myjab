@@ -39,6 +39,7 @@ export default function Subscribe() {
     const user = {
       username: formValues.name,
       email: formValues.email,
+      phone: "",
       pincode: byPincode ? +formValues.pincode : undefined,
       district: byPincode ? undefined : +selectedDistrict
     };
