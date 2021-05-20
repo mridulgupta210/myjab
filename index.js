@@ -56,13 +56,15 @@ const hitApi = (pincode, district, date) => {
 
     return got.get(url, {
         responseType: 'json',
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/56.0.2924.87 Safari/537.36',
+        Host: 'cdn-api.co-vin.in',
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
     })
         .catch(err => {
             console.error(JSON.stringify(err));
             return [];
         })
         .then(response => {
+            console.log("response headers from cowin:", response.headers);
             console.log("response from cowin:", response.body);
             return response.body ? response.body.centers : [];
         });
