@@ -23,10 +23,10 @@ const userSchema = new Schema({
     minlength: 6,
     maxlength: 6
   },
-  district: {
+  districts: [{
     type: Number,
     trim: true
-  },
+  }],
   filters: Filters
 }, {
   timestamps: true,

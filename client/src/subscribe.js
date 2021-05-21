@@ -49,20 +49,20 @@ export default function Subscribe() {
       }
     };
 
-    // fetch("/users/add", {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(user),
-    // })
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       setShowSuccess(true);
-    //     } else {
-    //       setShowFailure(true);
-    //     }
-    //   });
+    fetch("/users/add", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setShowSuccess(true);
+        } else {
+          setShowFailure(true);
+        }
+      });
   };
 
   const handleSubmit = (event) => {
@@ -106,14 +106,14 @@ export default function Subscribe() {
     <div className="main">
       <b>Please enter your details to receive email notifications as soon as vaccines slots become available in your area.</b>
       <form className="main" onSubmit={handleSubmit}>
-        <label>
+        <label className="group">
           Name: &nbsp;
           <input type="text" name="name" value={formValues.name} onChange={handleChange} required />
         </label>
 
-        <label>
+        <label className="group">
           Email: &nbsp;
-          <input type="text" name="email" value={formValues.email} onChange={handleChange} required />
+          <input type="email" name="email" value={formValues.email} onChange={handleChange} required />
         </label>
 
         <label>
@@ -158,7 +158,7 @@ export default function Subscribe() {
           </div>
         </label>
 
-        <label>
+        <label className="group">
           <b>Check your nearest vaccination center and slots availability</b><br />
           <div className="subchoice">
             <input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} />
@@ -168,27 +168,31 @@ export default function Subscribe() {
           </div>
         </label>
 
-        {byPincode && <label>
+        {byPincode && <label className="group">
           Pincode: &nbsp;
           <input type="text" name="pincode" value={formValues.pincode} onChange={handleChange} />
         </label>}
 
         {!byPincode &&
-          <>
-            <label>State</label>
-            <select value={selectedState} onChange={onStateSelect}>
-              {states.map(state => <option value={state.state_id}>{state.state_name}</option>)}
-            </select>
-            <label>District</label>
-            <Dropdown
-              multiSelect
-              placeHolder="Select district(s)"
-              selectedKeys={selectedDistricts}
-              styles={{ dropdown: { minWidth: 300 } }}
-              options={districts.map(district => ({ key: district.district_id, text: district.district_name }))}
-              onChange={onDistrictChange}
-            />
-          </>
+          <div className="group column">
+            <div className="group">
+              <label>State: &nbsp;</label>
+              <select value={selectedState} onChange={onStateSelect}>
+                {states.map(state => <option value={state.state_id}>{state.state_name}</option>)}
+              </select>
+            </div>
+            <div className="group">
+              <label>District: &nbsp;</label>
+              <Dropdown
+                multiSelect
+                placeHolder="Select district(s)"
+                selectedKeys={selectedDistricts}
+                styles={{ dropdown: { minWidth: 300 } }}
+                options={districts.map(district => ({ key: district.district_id, text: district.district_name }))}
+                onChange={onDistrictChange}
+              />
+            </div>
+          </div>
         }
 
         <input type="submit" value="Submit" disabled={formSubmitted} />
