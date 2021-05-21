@@ -14,9 +14,9 @@ router.route('/remove/:email').delete((req, res) => {
 });
 
 router.route('/add').post((req, res) => {
-    const { username, email, pincode, district } = req.body;
+    const { username, email, pincode, district, filters } = req.body;
 
-    const newUser = new User({ username, email, pincode, district });
+    const newUser = new User({ username, email, pincode, district, filters });
 
     newUser.save()
         .then(() => res.json('User added!'))

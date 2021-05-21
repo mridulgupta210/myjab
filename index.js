@@ -89,8 +89,8 @@ function sendMail(text, mailId) {
         });
 }
 
-// cron.schedule("*/10 * * * * *", function () {
-cron.schedule('0 */1 * * *', function () {
+cron.schedule("*/10 * * * * *", function () {
+    // cron.schedule('0 */1 * * *', function () {
     fetchData((users) => {
         users.forEach(user => {
             const centers = [];
@@ -110,8 +110,10 @@ cron.schedule('0 */1 * * *', function () {
 
             const onCentersFetchComplete = () => {
                 const validCenters = [];
-                centers.forEach(center => {
-                    const sessions = center.sessions.filter(session => session.available_capacity > 0);
+                centers.filter(center => !user.filters.feetype || center.fee_type === user.filters.feetype).forEach(center => {
+                    const sessions = center.sessions.filter(session => session.available_capacity > 0 &&
+                        (!user.filters.age || user.filters.age === session.min_age_limit) &&
+                        (!user.filters.vaccinetype || user.filters.vaccinetype === session.vaccine));
                     if (sessions.length > 0) {
                         validCenters.push({
                             centerName: center.name,

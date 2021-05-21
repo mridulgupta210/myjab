@@ -10,7 +10,7 @@ export default function Subscribe() {
 
   const [byPincode, setByPincode] = React.useState(true);
 
-  const [formValues, setFormValues] = React.useState({});
+  const [formValues, setFormValues] = React.useState({ filters: {} });
   const [formSubmitted, setFormSubmitted] = React.useState(false);
 
   const [showSuccess, setShowSuccess] = React.useState(false);
@@ -40,7 +40,12 @@ export default function Subscribe() {
       username: formValues.name,
       email: formValues.email,
       pincode: byPincode ? +formValues.pincode : undefined,
-      district: byPincode ? undefined : +selectedDistrict
+      district: byPincode ? undefined : +selectedDistrict,
+      filters: {
+        age: formValues.filters.age ? +formValues.filters.age : undefined,
+        vaccinetype: formValues.filters.vaccinetype,
+        feetype: formValues.filters.feetype
+      }
     };
 
     fetch("/users/add", {
@@ -70,7 +75,17 @@ export default function Subscribe() {
   }
 
   const handleChange = (event) => {
-    setFormValues({ ...formValues, [event.target.name]: event.target.value });
+    if (event.target.name.includes("filter.")) {
+      const [, field] = event.target.name.split(".");
+
+      setFormValues(Object.assign({}, formValues, {
+        filters: Object.assign({}, formValues.filters, {
+          [field]: event.target.value
+        })
+      }));
+    } else {
+      setFormValues({ ...formValues, [event.target.name]: event.target.value });
+    }
   }
 
   const onStateSelect = e => {
@@ -94,11 +109,46 @@ export default function Subscribe() {
         </label>
 
         <label>
-          Check your nearest vaccination center and slots availability
-          <input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} />
-          <label>By pincode</label>
-          <input type="radio" name="byDistrict" value={false} checked={!byPincode} onChange={() => setByPincode(false)} />
-          <label>By district</label>
+          Drill down on the vaccination you want based on:<br />
+          <div className="subchoice">
+            Age: &nbsp;
+            <input type="radio" name="filter.age" value={undefined} checked={!formValues.filters.age} onChange={handleChange} />
+            <label>All</label>
+            <input type="radio" name="filter.age" value="18" checked={formValues.filters.age === "18"} onChange={handleChange} />
+            <label>18 - 45 only</label>
+            <input type="radio" name="filter.age" value="45" checked={formValues.filters.age === "45"} onChange={handleChange} />
+            <label>45+ only</label>
+          </div>
+          <div className="subchoice">
+            Vaccine type: &nbsp;
+            <input type="radio" name="filter.vaccinetype" value={undefined} checked={!formValues.filters.vaccinetype} onChange={handleChange} />
+            <label>All</label>
+            <input type="radio" name="filter.vaccinetype" value="COVISHIELD" checked={formValues.filters.vaccinetype === "COVISHIELD"} onChange={handleChange} />
+            <label>Covishield</label>
+            <input type="radio" name="filter.vaccinetype" value="COVAXIN" checked={formValues.filters.vaccinetype === "COVAXIN"} onChange={handleChange} />
+            <label>Covaxin</label>
+            <input type="radio" name="filter.vaccinetype" value="SPUTNIKV" checked={formValues.filters.vaccinetype === "SPUTNIKV"} onChange={handleChange} />
+            <label>Sputnik V</label>
+          </div>
+          <div className="subchoice">
+            Fee type: &nbsp;
+            <input type="radio" name="filter.feetype" value={undefined} checked={!formValues.filters.feetype} onChange={handleChange} />
+            <label>All</label>
+            <input type="radio" name="filter.feetype" value="Free" checked={formValues.filters.feetype === "Free"} onChange={handleChange} />
+            <label>Free</label>
+            <input type="radio" name="filter.feetype" value="Paid" checked={formValues.filters.feetype === "Paid"} onChange={handleChange} />
+            <label>Paid</label>
+          </div>
+        </label>
+
+        <label>
+          Check your nearest vaccination center and slots availability<br />
+          <div className="subchoice">
+            <input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} />
+            <label>By pincode</label>
+            <input type="radio" name="byDistrict" value={false} checked={!byPincode} onChange={() => setByPincode(false)} />
+            <label>By district</label>
+          </div>
         </label>
 
         {byPincode && <label>

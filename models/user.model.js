@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const Filters = require('./filters.model');
+
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -25,10 +27,11 @@ const userSchema = new Schema({
     type: Number,
     trim: true
   },
+  filters: Filters
 }, {
   timestamps: true,
 });
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model(process.env.MODEL_NAME || 'User', userSchema);
 
 module.exports = User;
