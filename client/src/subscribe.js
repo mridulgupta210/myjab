@@ -1,12 +1,13 @@
 import React from "react";
 import "./App.css";
+import { Dropdown } from '@fluentui/react/lib/Dropdown';
 
 export default function Subscribe() {
   const [states, setStates] = React.useState([]);
   const [selectedState, setSelectedState] = React.useState();
 
   const [districts, setDistricts] = React.useState([]);
-  const [selectedDistrict, setSelectedDistrict] = React.useState();
+  const [selectedDistricts, setSelectedDistricts] = React.useState([]);
 
   const [byPincode, setByPincode] = React.useState(true);
 
@@ -31,7 +32,6 @@ export default function Subscribe() {
       .then(res => res.json())
       .then(res => {
         setDistricts(res.districts);
-        setSelectedDistrict(res.districts[0].district_id.toString());
       })
   }
 
@@ -40,7 +40,7 @@ export default function Subscribe() {
       username: formValues.name,
       email: formValues.email,
       pincode: byPincode ? +formValues.pincode : undefined,
-      district: byPincode ? undefined : +selectedDistrict,
+      districts: byPincode ? undefined : selectedDistricts,
       filters: {
         age: formValues.filters.age ? +formValues.filters.age : undefined,
         vaccinetype: formValues.filters.vaccinetype,
@@ -49,25 +49,25 @@ export default function Subscribe() {
       }
     };
 
-    fetch("/users/add", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          setShowSuccess(true);
-        } else {
-          setShowFailure(true);
-        }
-      });
+    // fetch("/users/add", {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(user),
+    // })
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       setShowSuccess(true);
+    //     } else {
+    //       setShowFailure(true);
+    //     }
+    //   });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if ((byPincode && !formValues.pincode?.trim()) || (!byPincode && (!selectedDistrict?.trim() || !selectedState?.trim()))) {
+    if ((byPincode && !formValues.pincode?.trim()) || (!byPincode && (selectedDistricts.length === 0 || !selectedState?.trim()))) {
       alert("Please enter pincode or select a district!!");
     } else {
       setFormSubmitted(true);
@@ -92,12 +92,19 @@ export default function Subscribe() {
   const onStateSelect = e => {
     const state = e.target.value;
     setSelectedState(state);
+    setSelectedDistricts([]);
     getDistricts(state);
   }
 
+  const onDistrictChange = (event, item) => {
+    if (item) {
+      setSelectedDistricts(item.selected ? [...selectedDistricts, item.key] : selectedDistricts.filter(key => key !== item.key));
+    }
+  };
+
   return (
     <div className="main">
-      Please enter your details to receive email notifications as soon as vaccines slots become available in your area.
+      <b>Please enter your details to receive email notifications as soon as vaccines slots become available in your area.</b>
       <form className="main" onSubmit={handleSubmit}>
         <label>
           Name: &nbsp;
@@ -110,7 +117,7 @@ export default function Subscribe() {
         </label>
 
         <label>
-          Drill down on the vaccination you want based on:<br />
+          <b>Drill down on the vaccination you want based on:</b><br />
           <div className="subchoice">
             Age: &nbsp;
             <input type="radio" name="filter.age" value={undefined} checked={!formValues.filters.age} onChange={handleChange} />
@@ -152,7 +159,7 @@ export default function Subscribe() {
         </label>
 
         <label>
-          Check your nearest vaccination center and slots availability<br />
+          <b>Check your nearest vaccination center and slots availability</b><br />
           <div className="subchoice">
             <input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} />
             <label>By pincode</label>
@@ -173,9 +180,14 @@ export default function Subscribe() {
               {states.map(state => <option value={state.state_id}>{state.state_name}</option>)}
             </select>
             <label>District</label>
-            <select value={selectedDistrict} onChange={e => setSelectedDistrict(e.target.value)}>
-              {districts.map(district => <option value={district.district_id}>{district.district_name}</option>)}
-            </select>
+            <Dropdown
+              multiSelect
+              placeHolder="Select district(s)"
+              selectedKeys={selectedDistricts}
+              styles={{ dropdown: { minWidth: 300 } }}
+              options={districts.map(district => ({ key: district.district_id, text: district.district_name }))}
+              onChange={onDistrictChange}
+            />
           </>
         }
 

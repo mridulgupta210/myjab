@@ -4,9 +4,10 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  padding: 20px;
 }
 
-.main label, .main div, .main span {
+.main label {
   padding: 20px;
 }
 
