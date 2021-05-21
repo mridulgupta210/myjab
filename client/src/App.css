@@ -4,10 +4,16 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin: 20px;
 }
 
-.main label, .main div, .main span {
-  padding: 20px;
+.group {
+  margin: 20px;
+}
+
+.group.column {
+  display: flex;
+  flex-direction: column;
 }
 
 .main button {
@@ -27,6 +33,6 @@
 }
 
 .subchoice label {
-  padding-left: 5px;
-  padding-right: 20px;
+  margin-left: 5px;
+  margin-right: 20px;
 }

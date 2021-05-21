@@ -99,17 +99,17 @@ export default function Subscribe() {
     <div className="main">
       Please enter your details to receive email notifications as soon as vaccines slots become available in your area.
       <form className="main" onSubmit={handleSubmit}>
-        <label>
+        <label className="group">
           Name: &nbsp;
           <input type="text" name="name" value={formValues.name} onChange={handleChange} required />
         </label>
 
-        <label>
+        <label className="group">
           Email: &nbsp;
           <input type="text" name="email" value={formValues.email} onChange={handleChange} required />
         </label>
 
-        <label>
+        <label className="group">
           Drill down on the vaccination you want based on:<br />
           <div className="subchoice">
             Age: &nbsp;
@@ -151,7 +151,7 @@ export default function Subscribe() {
           </div>
         </label>
 
-        <label>
+        <label className="group">
           Check your nearest vaccination center and slots availability<br />
           <div className="subchoice">
             <input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} />
@@ -161,22 +161,26 @@ export default function Subscribe() {
           </div>
         </label>
 
-        {byPincode && <label>
+        {byPincode && <label className="group">
           Pincode: &nbsp;
           <input type="text" name="pincode" value={formValues.pincode} onChange={handleChange} />
         </label>}
 
         {!byPincode &&
-          <>
-            <label>State</label>
-            <select value={selectedState} onChange={onStateSelect}>
-              {states.map(state => <option value={state.state_id}>{state.state_name}</option>)}
-            </select>
-            <label>District</label>
-            <select value={selectedDistrict} onChange={e => setSelectedDistrict(e.target.value)}>
-              {districts.map(district => <option value={district.district_id}>{district.district_name}</option>)}
-            </select>
-          </>
+          <div className="group column">
+            <div className="group">
+              <label>State: &nbsp;</label>
+              <select value={selectedState} onChange={onStateSelect}>
+                {states.map(state => <option value={state.state_id}>{state.state_name}</option>)}
+              </select>
+            </div>
+            <div className="group">
+              <label>District: &nbsp;</label>
+              <select value={selectedDistrict} onChange={e => setSelectedDistrict(e.target.value)}>
+                {districts.map(district => <option value={district.district_id}>{district.district_name}</option>)}
+              </select>
+            </div>
+          </div>
         }
 
         <input type="submit" value="Submit" disabled={formSubmitted} />
