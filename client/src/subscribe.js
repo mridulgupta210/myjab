@@ -45,7 +45,7 @@ export default function Subscribe() {
         age: formValues.filters.age ? +formValues.filters.age : undefined,
         vaccinetype: formValues.filters.vaccinetype,
         feetype: formValues.filters.feetype,
-        dosetype: formValues.dosetype ? +formValues.dosetype : undefined
+        dosetype: formValues.filters.dosetype ? +formValues.filters.dosetype : undefined
       }
     };
 
