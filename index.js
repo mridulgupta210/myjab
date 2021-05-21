@@ -4,13 +4,9 @@ const mongoose = require('mongoose');
 const cron = require('node-cron');
 const nodemailer = require("nodemailer");
 const path = require("path");
-const axios = require('axios');
-const got = require("got");
 const fetch = require("node-fetch");
 
 require('dotenv').config();
-
-const api_helper = require('./apiHelper')
 
 const app = express();
 
