@@ -47,19 +47,19 @@ const getDate = d => {
     return `${da}-${mo}-${ye}`;
 }
 
-const hitApi = (pincode, district, date) => {
-    const url = `https://myjabproxy.azurewebsites.net/?${pincode ? `pincode=${pincode}` : `district=${district}`}&date=${getDate(date)}`;
+const hitApi = (pincode, districts, date) => {
+    const data = [];
 
-    return fetch(url)
+    return Promise.all(districts.map(district => {
+        const url = `https://myjabproxy.azurewebsites.net/?${pincode ? `pincode=${pincode}` : `district=${district}`}&date=${getDate(date)}`;
+        return fetch(url)
         .then(res => res.json())
-        .catch(err => {
-            console.error(JSON.stringify(err));
-            return [];
-        })
-        .then(response => {
-            console.log("response from cowin:", response);
-            return response ? response : [];
-        });
+        .then(response => response ? data.push(...response) : []);
+    }
+    )).then(() => data).catch(err => {
+        console.error(JSON.stringify(err));
+        return [];
+    });
 }
 
 function sendMail(text, mailId) {
@@ -96,8 +96,9 @@ cron.schedule('0 */1 * * *', function () {
             const centers = [];
             let date = new Date();
             const intervalId = setInterval(() => {
-                hitApi(user.pincode, user.district, date)
+                hitApi(user.pincode, user.districts, date)
                     .then(res => {
+                        console.log("aggregated response", res);
                         if (res.length === 0) {
                             clearInterval(intervalId);
                             onCentersFetchComplete();
