@@ -112,6 +112,7 @@ cron.schedule('0 */1 * * *', function () {
                 const validCenters = [];
                 centers.filter(center => !user.filters.feetype || center.fee_type === user.filters.feetype).forEach(center => {
                     const sessions = center.sessions.filter(session => session.available_capacity > 0 &&
+                        (!user.filters.dosetype || (user.filters.dosetype === 1 ? session.available_capacity_dose1 > 0 : session.available_capacity_dose2 > 0)) &&
                         (!user.filters.age || user.filters.age === session.min_age_limit) &&
                         (!user.filters.vaccinetype || user.filters.vaccinetype === session.vaccine));
                     if (sessions.length > 0) {

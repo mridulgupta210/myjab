@@ -14,6 +14,9 @@ const FiltersSchema = new Schema({
   feetype: {
     type: String,
     trim: true
+  },
+  dosetype: {
+    type: Number
   }
 });
 

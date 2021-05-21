@@ -44,7 +44,8 @@ export default function Subscribe() {
       filters: {
         age: formValues.filters.age ? +formValues.filters.age : undefined,
         vaccinetype: formValues.filters.vaccinetype,
-        feetype: formValues.filters.feetype
+        feetype: formValues.filters.feetype,
+        dosetype: formValues.dosetype ? +formValues.dosetype : undefined
       }
     };
 
@@ -138,6 +139,15 @@ export default function Subscribe() {
             <label>Free</label>
             <input type="radio" name="filter.feetype" value="Paid" checked={formValues.filters.feetype === "Paid"} onChange={handleChange} />
             <label>Paid</label>
+          </div>
+          <div className="subchoice">
+            Dose type: &nbsp;
+            <input type="radio" name="filter.dosetype" value={undefined} checked={!formValues.filters.dosetype} onChange={handleChange} />
+            <label>All</label>
+            <input type="radio" name="filter.dosetype" value="1" checked={formValues.filters.dosetype === "1"} onChange={handleChange} />
+            <label>Dose 1</label>
+            <input type="radio" name="filter.dosetype" value="2" checked={formValues.filters.dosetype === "2"} onChange={handleChange} />
+            <label>Dose 2</label>
           </div>
         </label>
 
