@@ -4,13 +4,13 @@ import { PrimaryButton } from "@fluentui/react/lib/Button";
 import ByDistrict from "./byDistrict";
 
 export default function Subscribe() {
-  const [byPincode, setByPincode] = React.useState(true);
+  const [byPincode, setByPincode] = React.useState(false);
 
   const [formValues, setFormValues] = React.useState({ filters: {} });
   const [formSubmitted, setFormSubmitted] = React.useState(false);
 
   const [showSuccess, setShowSuccess] = React.useState(false);
-  const [showFailure, setShowFailure] = React.useState(false);
+  const [failureMsg, setFailureMsg] = React.useState(null);
 
   let selectedDistricts = [];
 
@@ -38,10 +38,24 @@ export default function Subscribe() {
       .then((res) => {
         if (res.status === 200) {
           setShowSuccess(true);
+        } else if (res.status === 500) {
+          setFailureMsg("Some error occurred. Please contact the administrator.")
         } else {
-          setShowFailure(true);
+          res.json().then(resText => {
+            let errorText = "Some error occurred. Please contact the administrator.";
+            if (resText.includes("email")) {
+              errorText = "Submission failed!! Details (email) mentioned already exists."
+              alert(errorText);
+              window.location.reload();
+            } else if (resText.includes("username")) {
+              errorText = "Submission failed!! Username should contain atleast 3 characters."
+              alert(errorText);
+              window.location.reload();
+            }
+            setFailureMsg(errorText);
+          })
         }
-      });
+      })
   };
 
   const handleSubmit = (event) => {
@@ -71,7 +85,7 @@ export default function Subscribe() {
   return (
     <div className="main">
       <b>Please enter your details to receive email notifications as soon as vaccines slots become available in your area.</b>
-      <form className="main" onSubmit={handleSubmit}>
+      <form name="myJabForm" className="main" onSubmit={handleSubmit}>
         <label className="group">
           Name: &nbsp;
           <input type="text" name="name" value={formValues.name} onChange={handleChange} required />
@@ -122,8 +136,8 @@ export default function Subscribe() {
         <label className="group">
           <b>Check your nearest vaccination center and slots availability</b><br />
           <div className="subchoice">
-            <label><input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} /> By pincode</label>
             <label><input type="radio" name="byDistrict" value={false} checked={!byPincode} onChange={() => setByPincode(false)} /> By district</label>
+            <label><input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} /> By pincode</label>
           </div>
         </label>
 
@@ -137,7 +151,7 @@ export default function Subscribe() {
         <PrimaryButton text="Submit" type="submit" disabled={formSubmitted} />
       </form>
       {showSuccess && <div className="success">Submission successful! You will start receiving email notifications soon.</div>}
-      {showFailure && <div className="failure">Submission failed!! Details mentioned already exist.</div>}
+      {failureMsg && <div className="failure">{failureMsg}</div>}
     </div>
   );
 }
