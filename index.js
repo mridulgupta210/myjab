@@ -98,7 +98,6 @@ cron.schedule('0 */1 * * *', function () {
             const intervalId = setInterval(() => {
                 hitApi(user.pincode, user.districts, date)
                     .then(res => {
-                        console.log("aggregated response", res);
                         if (res.length === 0) {
                             clearInterval(intervalId);
                             onCentersFetchComplete();
@@ -107,9 +106,10 @@ cron.schedule('0 */1 * * *', function () {
                             centers.push(...res);
                         }
                     })
-            }, 10000);
-
-            const onCentersFetchComplete = () => {
+                }, 10000);
+                
+                const onCentersFetchComplete = () => {
+                console.log("aggregated response", centers);
                 const validCenters = [];
                 centers.filter(center => !user.filters.feetype || center.fee_type === user.filters.feetype).forEach(center => {
                     const sessions = center.sessions.filter(session => session.available_capacity > 0 &&
