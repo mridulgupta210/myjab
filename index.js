@@ -51,7 +51,7 @@ const hitApi = (pincode, districts, date) => {
     const data = [];
 
     return Promise.all(districts.map(district => {
-        const url = `https://myjabproxy.azurewebsites.net/?${pincode ? `pincode=${pincode}` : `district=${district}`}&date=${getDate(date)}`;
+        const url = `${process.env.PROXY_URL}?${pincode ? `pincode=${pincode}` : `district=${district}`}&date=${getDate(date)}`;
         return fetch(url)
         .then(res => res.json())
         .then(response => response ? data.push(...response) : []);
@@ -66,13 +66,13 @@ function sendMail(text, mailId) {
     let mailTransporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
-            user: "myjabnotifier@gmail.com",
+            user: process.env.EMAIL_ID,
             pass: process.env.EMAIL_PASSWORD
         }
     });
 
     let mailDetails = {
-        from: "myjabnotifier@gmail.com",
+        from: process.env.EMAIL_ID,
         to: mailId,
         subject: "Available slots",
         text
