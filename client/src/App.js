@@ -9,7 +9,7 @@ function App() {
   return (
     <div className="main">
       {isSubscriptionMode === null && <>
-        <span>Welcome to My jab alert!</span>
+        <span>Welcome to My jab slots' notifier!</span>
         <button onClick={() => setIsSubscriptionMode(true)}>Subscribe</button>
         <button onClick={() => setIsSubscriptionMode(false)}>Unsubscribe</button>
       </>}

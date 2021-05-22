@@ -1,14 +1,9 @@
 import React from "react";
 import "./App.css";
-import { Dropdown } from '@fluentui/react/lib/Dropdown';
+import { PrimaryButton } from "@fluentui/react/lib/Button";
+import ByDistrict from "./byDistrict";
 
 export default function Subscribe() {
-  const [states, setStates] = React.useState([]);
-  const [selectedState, setSelectedState] = React.useState();
-
-  const [districts, setDistricts] = React.useState([]);
-  const [selectedDistricts, setSelectedDistricts] = React.useState([]);
-
   const [byPincode, setByPincode] = React.useState(true);
 
   const [formValues, setFormValues] = React.useState({ filters: {} });
@@ -17,23 +12,7 @@ export default function Subscribe() {
   const [showSuccess, setShowSuccess] = React.useState(false);
   const [showFailure, setShowFailure] = React.useState(false);
 
-  React.useEffect(() => {
-    fetch("https://cdn-api.co-vin.in/api/v2/admin/location/states")
-      .then(res => res.json())
-      .then(res => {
-        setStates(res.states);
-        setSelectedState(res.states[0].state_id.toString());
-        getDistricts(res.states[0].state_id);
-      })
-  }, []);
-
-  const getDistricts = (stateId) => {
-    fetch(`https://cdn-api.co-vin.in/api/v2/admin/location/districts/${stateId}`)
-      .then(res => res.json())
-      .then(res => {
-        setDistricts(res.districts);
-      })
-  }
+  let selectedDistricts = [];
 
   const postUser = () => {
     const user = {
@@ -49,25 +28,25 @@ export default function Subscribe() {
       }
     };
 
-    fetch("/users/add", {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          setShowSuccess(true);
-        } else {
-          setShowFailure(true);
-        }
-      });
+    // fetch("/users/add", {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(user),
+    // })
+    //   .then((res) => {
+    //     if (res.status === 200) {
+    //       setShowSuccess(true);
+    //     } else {
+    //       setShowFailure(true);
+    //     }
+    //   });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if ((byPincode && !formValues.pincode?.trim()) || (!byPincode && (selectedDistricts.length === 0 || !selectedState?.trim()))) {
+    if ((byPincode && !formValues.pincode?.trim()) || (!byPincode && selectedDistricts.length === 0)) {
       alert("Please enter pincode or select a district!!");
     } else {
       setFormSubmitted(true);
@@ -89,19 +68,6 @@ export default function Subscribe() {
     }
   }
 
-  const onStateSelect = e => {
-    const state = e.target.value;
-    setSelectedState(state);
-    setSelectedDistricts([]);
-    getDistricts(state);
-  }
-
-  const onDistrictChange = (event, item) => {
-    if (item) {
-      setSelectedDistricts(item.selected ? [...selectedDistricts, item.key] : selectedDistricts.filter(key => key !== item.key));
-    }
-  };
-
   return (
     <div className="main">
       <b>Please enter your details to receive email notifications as soon as vaccines slots become available in your area.</b>
@@ -117,54 +83,47 @@ export default function Subscribe() {
         </label>
 
         <label>
-          <b>Drill down on the vaccination you want based on:</b><br />
-          <div className="subchoice">
-            Age: &nbsp;
-            <input type="radio" name="filter.age" value={undefined} checked={!formValues.filters.age} onChange={handleChange} />
-            <label>All</label>
-            <input type="radio" name="filter.age" value="18" checked={formValues.filters.age === "18"} onChange={handleChange} />
-            <label>18 - 45 only</label>
-            <input type="radio" name="filter.age" value="45" checked={formValues.filters.age === "45"} onChange={handleChange} />
-            <label>45+ only</label>
+          <b>Filter on the vaccination you want based on:</b><br />
+          <div>
+            Age:
+            <div className="subchoice">
+              <label><input type="radio" name="filter.age" value={undefined} checked={!formValues.filters.age} onChange={handleChange} /> All</label>
+              <label><input type="radio" name="filter.age" value="18" checked={formValues.filters.age === "18"} onChange={handleChange} /> 18 - 45</label>
+              <label><input type="radio" name="filter.age" value="45" checked={formValues.filters.age === "45"} onChange={handleChange} /> 45+</label>
+            </div>
           </div>
-          <div className="subchoice">
-            Vaccine type: &nbsp;
-            <input type="radio" name="filter.vaccinetype" value={undefined} checked={!formValues.filters.vaccinetype} onChange={handleChange} />
-            <label>All</label>
-            <input type="radio" name="filter.vaccinetype" value="COVISHIELD" checked={formValues.filters.vaccinetype === "COVISHIELD"} onChange={handleChange} />
-            <label>Covishield</label>
-            <input type="radio" name="filter.vaccinetype" value="COVAXIN" checked={formValues.filters.vaccinetype === "COVAXIN"} onChange={handleChange} />
-            <label>Covaxin</label>
-            <input type="radio" name="filter.vaccinetype" value="SPUTNIKV" checked={formValues.filters.vaccinetype === "SPUTNIKV"} onChange={handleChange} />
-            <label>Sputnik V</label>
+          <div>
+            Vaccine type:
+            <div className="subchoice">
+              <label><input type="radio" name="filter.vaccinetype" value={undefined} checked={!formValues.filters.vaccinetype} onChange={handleChange} /> All</label>
+              <label><input type="radio" name="filter.vaccinetype" value="COVISHIELD" checked={formValues.filters.vaccinetype === "COVISHIELD"} onChange={handleChange} /> Covishield</label>
+              <label><input type="radio" name="filter.vaccinetype" value="COVAXIN" checked={formValues.filters.vaccinetype === "COVAXIN"} onChange={handleChange} /> Covaxin</label>
+              <label><input type="radio" name="filter.vaccinetype" value="SPUTNIKV" checked={formValues.filters.vaccinetype === "SPUTNIKV"} onChange={handleChange} /> Sputnik V</label>
+            </div>
           </div>
-          <div className="subchoice">
-            Fee type: &nbsp;
-            <input type="radio" name="filter.feetype" value={undefined} checked={!formValues.filters.feetype} onChange={handleChange} />
-            <label>All</label>
-            <input type="radio" name="filter.feetype" value="Free" checked={formValues.filters.feetype === "Free"} onChange={handleChange} />
-            <label>Free</label>
-            <input type="radio" name="filter.feetype" value="Paid" checked={formValues.filters.feetype === "Paid"} onChange={handleChange} />
-            <label>Paid</label>
+          <div>
+            Fee type:
+            <div className="subchoice">
+              <label><input type="radio" name="filter.feetype" value={undefined} checked={!formValues.filters.feetype} onChange={handleChange} /> All</label>
+              <label><input type="radio" name="filter.feetype" value="Free" checked={formValues.filters.feetype === "Free"} onChange={handleChange} /> Free</label>
+              <label><input type="radio" name="filter.feetype" value="Paid" checked={formValues.filters.feetype === "Paid"} onChange={handleChange} /> Paid</label>
+            </div>
           </div>
-          <div className="subchoice">
-            Dose type: &nbsp;
-            <input type="radio" name="filter.dosetype" value={undefined} checked={!formValues.filters.dosetype} onChange={handleChange} />
-            <label>All</label>
-            <input type="radio" name="filter.dosetype" value="1" checked={formValues.filters.dosetype === "1"} onChange={handleChange} />
-            <label>Dose 1</label>
-            <input type="radio" name="filter.dosetype" value="2" checked={formValues.filters.dosetype === "2"} onChange={handleChange} />
-            <label>Dose 2</label>
+          <div>
+            Dose type:
+            <div className="subchoice">
+              <label><input type="radio" name="filter.dosetype" value={undefined} checked={!formValues.filters.dosetype} onChange={handleChange} /> All</label>
+              <label><input type="radio" name="filter.dosetype" value="1" checked={formValues.filters.dosetype === "1"} onChange={handleChange} /> Dose 1</label>
+              <label><input type="radio" name="filter.dosetype" value="2" checked={formValues.filters.dosetype === "2"} onChange={handleChange} /> Dose 2</label>
+            </div>
           </div>
         </label>
 
         <label className="group">
           <b>Check your nearest vaccination center and slots availability</b><br />
           <div className="subchoice">
-            <input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} />
-            <label>By pincode</label>
-            <input type="radio" name="byDistrict" value={false} checked={!byPincode} onChange={() => setByPincode(false)} />
-            <label>By district</label>
+            <label><input type="radio" name="byPincode" value={true} checked={byPincode} onChange={() => setByPincode(true)} /> By pincode</label>
+            <label><input type="radio" name="byDistrict" value={false} checked={!byPincode} onChange={() => setByPincode(false)} /> By district</label>
           </div>
         </label>
 
@@ -173,29 +132,9 @@ export default function Subscribe() {
           <input type="text" name="pincode" value={formValues.pincode} onChange={handleChange} />
         </label>}
 
-        {!byPincode &&
-          <div className="group column">
-            <div className="group">
-              <label>State: &nbsp;</label>
-              <select value={selectedState} onChange={onStateSelect}>
-                {states.map(state => <option value={state.state_id}>{state.state_name}</option>)}
-              </select>
-            </div>
-            <div className="group">
-              <label>District: &nbsp;</label>
-              <Dropdown
-                multiSelect
-                placeHolder="Select district(s)"
-                selectedKeys={selectedDistricts}
-                styles={{ dropdown: { minWidth: 300 } }}
-                options={districts.map(district => ({ key: district.district_id, text: district.district_name }))}
-                onChange={onDistrictChange}
-              />
-            </div>
-          </div>
-        }
+        {!byPincode && <ByDistrict totalSelectedDistricts={x => { selectedDistricts = x; }} />}
 
-        <input type="submit" value="Submit" disabled={formSubmitted} />
+        <PrimaryButton text="Submit" type="submit" disabled={formSubmitted} />
       </form>
       {showSuccess && <div className="success">Submission successful! You will start receiving email notifications soon.</div>}
       {showFailure && <div className="failure">Submission failed!! Details mentioned already exist.</div>}
