@@ -17,7 +17,7 @@ export default function Unsubscribe() {
 
   const deleteRecord = () => {
     fetch(`/users/remove/${formValues.email}`, {
-      method: 'Delete',
+      method: 'PUT',
     }).then(() => {
       window.location.reload();
     });

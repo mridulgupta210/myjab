@@ -19,7 +19,7 @@ export default function Subscribe() {
       username: formValues.name,
       email: formValues.email,
       pincode: byPincode ? +formValues.pincode : undefined,
-      districts: byPincode ? undefined : selectedDistricts,
+      districts: byPincode ? [] : selectedDistricts,
       filters: {
         age: formValues.filters.age ? +formValues.filters.age : undefined,
         vaccinetype: formValues.filters.vaccinetype,

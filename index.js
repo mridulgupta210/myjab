@@ -33,7 +33,7 @@ Date.prototype.addDays = function (days) {
 const fetchData = function (callback) {
     let User = require('./models/user.model');
 
-    var userData = User.find({});
+    var userData = User.find({ $or: [{ enabled: true }, { enabled: undefined }] });
     userData.exec(function (err, data) {
         if (err) throw err;
         return callback(data);
@@ -53,8 +53,8 @@ const hitApi = (pincode, districts, date) => {
     return Promise.all(districts.map(district => {
         const url = `${process.env.PROXY_URL}?${pincode ? `pincode=${pincode}` : `district=${district}`}&date=${getDate(date)}`;
         return fetch(url)
-        .then(res => res.json())
-        .then(response => response ? data.push(...response) : []);
+            .then(res => res.json())
+            .then(response => response ? data.push(...response) : []);
     }
     )).then(() => data).catch(err => {
         console.error(JSON.stringify(err));
@@ -106,9 +106,9 @@ cron.schedule('0 */1 * * *', function () {
                             centers.push(...res);
                         }
                     })
-                }, 10000);
-                
-                const onCentersFetchComplete = () => {
+            }, 10000);
+
+            const onCentersFetchComplete = () => {
                 console.log("aggregated response", centers);
                 const validCenters = [];
                 centers.filter(center => !user.filters.feetype || center.fee_type === user.filters.feetype).forEach(center => {
