@@ -28,20 +28,20 @@ export default function Subscribe() {
       }
     };
 
-    // fetch("/users/add", {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(user),
-    // })
-    //   .then((res) => {
-    //     if (res.status === 200) {
-    //       setShowSuccess(true);
-    //     } else {
-    //       setShowFailure(true);
-    //     }
-    //   });
+    fetch("/users/add", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(user),
+    })
+      .then((res) => {
+        if (res.status === 200) {
+          setShowSuccess(true);
+        } else {
+          setShowFailure(true);
+        }
+      });
   };
 
   const handleSubmit = (event) => {
