@@ -27,7 +27,11 @@ const userSchema = new Schema({
     type: Number,
     trim: true
   }],
-  filters: Filters
+  filters: Filters,
+  enabled: {
+    type: Boolean,
+    default: true
+  }
 }, {
   timestamps: true,
 });
