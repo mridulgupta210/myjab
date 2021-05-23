@@ -94,7 +94,7 @@ export default function Subscribe() {
         <label className="group">
           Email: &nbsp;
           <input pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
-            title="Valid email format"
+            title="Please enter a valid email format"
             type="email" name="email" value={formValues.email} onChange={handleChange} required />
         </label>
 
@@ -143,7 +143,7 @@ export default function Subscribe() {
           </div>
         </label>
 
-        {byPincode && <label className="group">
+        {byPincode && <label>
           Pincode: &nbsp;
           <input type="text" name="pincode" value={formValues.pincode} onChange={handleChange} />
         </label>}

@@ -11,11 +11,6 @@
   margin: 20px;
 }
 
-.group.column {
-  display: flex;
-  flex-direction: column;
-}
-
 .main button {
   margin: 20px;
 }

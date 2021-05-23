@@ -58,7 +58,7 @@ export default function ByDistrict({ totalSelectedDistricts }) {
     }
 
     return (
-        <div className="group column">
+        <div>
             {Array.from(Array(totalGroups), (element, index) => (
                 <React.Fragment key={index}>
                     <div className="group">
