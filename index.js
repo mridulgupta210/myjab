@@ -185,38 +185,22 @@ My Jab
 
 const buildHtml = (name, centers) => {
     let html = `
-    <head>
-        <style>
-            table {
-                font-family: arial, sans-serif;
-                border-collapse: collapse;
-                width: 100%;
-            }
-
-            td, th {
-                border: 1px solid #dddddd;
-                text-align: left;
-                padding: 8px;
-            }
-        </style>
-    </head>
-    <body>
         <div>
             <p>Hi ${name},</p>
             <p>Available centers in your selected areas are mentioned below:</p>
-            <table>
+            <table style="font-family: arial, sans-serif;border-collapse: collapse;width: 100%;">
                 <tr>
-                    <th>Date</th>
-                    <th>District</th>
-                    <th>Center name</th>
-                    <th>Address</th>
-                    <th>Fee type</th>
-                    <th>Min. Age Limit</th>
-                    <th>Vaccine type</th>
-                    <th>Available Capacity</th>
-                    <th>Available Capacity for dose 1</th>
-                    <th>Available Capacity for dose 2</th>
-                    <th>Time slots</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Date</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">District</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Center name</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Address</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Fee type</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Min. Age Limit</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Vaccine type</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Available Capacity</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Available Capacity for dose 1</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Available Capacity for dose 2</th>
+                    <th style="border: 1px solid #dddddd;text-align: center;padding: 8px;">Time slots</th>
                 </tr>
     `;
 
@@ -224,17 +208,17 @@ const buildHtml = (name, centers) => {
         center.slots.forEach(slot => {
             html = html + `
                 <tr>
-                    <td>${slot.date}</td>
-                    <td>${center.district}</td>
-                    <td>${center.centerName}</td>
-                    <td>${center.address}</td>
-                    <td>${center.fees}</td>
-                    <td>${slot.min_age_limit}</td>
-                    <td>${slot.vaccine}</td>
-                    <td>${slot.available_capacity}</td>
-                    <td>${slot.available_capacity_dose1}</td>
-                    <td>${slot.available_capacity_dose2}</td>
-                    <td>${slot.slots.join(", ")}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${slot.date}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${center.district}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${center.centerName}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${center.address}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${center.fees}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${slot.min_age_limit}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${slot.vaccine}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${slot.available_capacity}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${slot.available_capacity_dose1}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${slot.available_capacity_dose2}</td>
+                    <td style="border: 1px solid #dddddd;text-align: center;padding: 8px;">${slot.slots.join(", ")}</td>
                 </tr>
             `;
         });
@@ -246,7 +230,6 @@ const buildHtml = (name, centers) => {
             <p>Thanks,</p>
             <p>My Jab</p>
         </div>
-    </body>
     `;
 
     return html;
