@@ -62,7 +62,7 @@ const hitApi = (pincode, districts, date) => {
     });
 }
 
-function sendMail(text, mailId) {
+function sendMail(text, mailId, html) {
     let mailTransporter = nodemailer.createTransport({
         service: "gmail",
         auth: {
@@ -75,7 +75,8 @@ function sendMail(text, mailId) {
         from: process.env.EMAIL_ID,
         to: mailId,
         subject: "Available slots",
-        text
+        text,
+        html
     };
 
     // Sending Email 
@@ -119,6 +120,7 @@ cron.schedule('0 */1 * * *', function () {
                     if (sessions.length > 0) {
                         validCenters.push({
                             centerName: center.name,
+                            district: center.district_name,
                             address: `${center.address}, ${center.block_name}, ${center.district_name} - ${center.pincode}`,
                             fees: center.fee_type,
                             slots: sessions
@@ -127,8 +129,9 @@ cron.schedule('0 */1 * * *', function () {
                 })
 
                 if (validCenters.length > 0) {
-                    const text = buildText(user.username, validCenters);
-                    sendMail(text, user.email);
+                    // const text = buildText(user.username, validCenters);
+                    const html = buildHtml(user.username, validCenters);
+                    sendMail(undefined, user.email, html);
                 } else if (date.getHours() === 22) {
                     const text = `Hi ${user.username},
 
@@ -178,6 +181,75 @@ My Jab
     `
 
     return text;
+}
+
+const buildHtml = (name, centers) => {
+    let html = `
+    <head>
+        <style>
+            table {
+                font-family: arial, sans-serif;
+                border-collapse: collapse;
+                width: 100%;
+            }
+
+            td, th {
+                border: 1px solid #dddddd;
+                text-align: left;
+                padding: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <div>
+            <p>Hi ${name},</p>
+            <p>Available centers in your selected areas are mentioned below:</p>
+            <table>
+                <tr>
+                    <th>Date</th>
+                    <th>District</th>
+                    <th>Center name</th>
+                    <th>Address</th>
+                    <th>Fee type</th>
+                    <th>Min. Age Limit</th>
+                    <th>Vaccine type</th>
+                    <th>Available Capacity</th>
+                    <th>Available Capacity for dose 1</th>
+                    <th>Available Capacity for dose 2</th>
+                    <th>Time slots</th>
+                </tr>
+    `;
+
+    centers.forEach(center => {
+        center.slots.forEach(slot => {
+            html = html + `
+                <tr>
+                    <td>${slot.date}</td>
+                    <td>${center.district}</td>
+                    <td>${center.centerName}</td>
+                    <td>${center.address}</td>
+                    <td>${center.fees}</td>
+                    <td>${slot.min_age_limit}</td>
+                    <td>${slot.vaccine}</td>
+                    <td>${slot.available_capacity}</td>
+                    <td>${slot.available_capacity_dose1}</td>
+                    <td>${slot.available_capacity_dose2}</td>
+                    <td>${slot.slots.join(", ")}</td>
+                </tr>
+            `;
+        });
+    });
+
+    html = html + `
+            </table>
+            <p>Stay indoors! Stay stafe!</p>
+            <p>Thanks,</p>
+            <p>My Jab</p>
+        </div>
+    </body>
+    `;
+
+    return html;
 }
 
 const usersRouter = require('./routes/users');
